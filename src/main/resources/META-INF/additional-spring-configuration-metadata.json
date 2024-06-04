@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "app.jagexPriceUrl",
+      "type": "java.lang.String",
+      "description": "Base URL for getting current GE prices for all items."
+    },
+    {
+      "name": "app.wikiPriceUrl",
+      "type": "java.lang.String",
+      "description": "URL for querying the latest prices from prices.runescape.wiki."
+    }
+  ] }

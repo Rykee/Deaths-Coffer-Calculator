@@ -1,0 +1,168 @@
+openapi: 3.1.0
+info:
+  version: '1.0'
+  title: Death's Coffer and Item API
+  description: Death's Coffer and Item API
+servers:
+  - url: http://localhost:8080/v1
+paths:
+  /items:
+    get:
+      operationId: getItems
+      description: >
+        Returns all items with both Grand Exchange guide price and current buy/sell prices.
+      summary: Returns all items.
+      x-content-type: application/json
+      x-accepts: application/json
+      x-spring-paginated: false
+      tags:
+        - "Items"
+      responses:
+        "200":
+          description: "The query ran successfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetItemsResponse'
+  /items/{id}:
+    get:
+      operationId: getItem
+      description: Returns an item identified by its ID number.
+      summary: Returns an item identified by its ID number.
+      x-content-type: application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - "Items"
+      responses:
+        "200":
+          description: "The query ran successfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+        "404":
+          description: "An item with the given ID cannot be found."
+
+  /calculate/deathsCoffer:
+    post:
+      operationId: calculateBestOfferings
+      description: Searches for the best items to offer to Death's Coffer. Sorted by the difference between the guide price and the actual buying price.
+      summary: Searches for the best items to offer to Death's Coffer.
+      requestBody:
+        description: The configuration for the calculation.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateBestDeathsCofferOfferingsRequest'
+      tags:
+        - "Calculators"
+      responses:
+        "200":
+          description: "The result of the calculation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeathsCofferCalculationResult'
+
+
+components:
+  schemas:
+    GetItemsResponse:
+      type: object
+      description: Response object containing items with paging information.
+      properties:
+        items:
+          type: array
+          description: List of Items
+          items:
+            $ref: '#/components/schemas/Item'
+
+    Item:
+      type: object
+      description: Model representing an item in OSRS.
+      properties:
+        id:
+          type: integer
+          description: The OSRS ID of the item
+          format: int32
+          examples: [4115]
+        name:
+          type: string
+          description: The name of the item.
+          examples: ['Abyssal whip']
+        grandExchangeGuidePrice:
+          type: integer
+          description: The guide price of an item on the Grand Exchange.
+          format: int64
+          examples: [150000]
+        buyPrice:
+          type: integer
+          description: The price for which the item is actually buys at.
+          format: int64
+          examples: [125000]
+        sellPrice:
+          type: integer
+          description: The price for which the item is actially sells for.
+          format: int64
+          examples: [135000]
+        lastGrandExchangeUpdate:
+          type: string
+          description: Indicates when was the item's guide price was last updated.
+          format: date-time
+        lastRuneLiteUpdate:
+          type: string
+          description: Indicates when was the item's buy/sell price was last updated.
+          format: date-time
+        tradeLimit:
+          type: integer
+          description: The trade limit of the item on the Grand Exchange.
+          format: int32
+        tradeVolume:
+          type: integer
+          format: int32
+          description: The number of transactions of this item in the last day.
+        iconPath:
+          type: string
+          description: A file path to the item's icon.
+
+    ItemOffering:
+      allOf:
+        - $ref: '#/components/schemas/Item'
+        - type: object
+          properties:
+            deathsCofferValue:
+              type: integer
+              format: int64
+              description: The item's value when offering it to Death's Coffer.
+
+    CalculateBestDeathsCofferOfferingsRequest:
+      type: object
+      properties:
+        minimumOfferingValue:
+          type: integer
+          format: int64
+          description: The minimum value of the items in Death's Coffer. (guidePrice*1.05)
+        maximumPrice:
+          type: integer
+          format: int64
+          description: The maximum buying price of the items.
+        minimumTradeVolume:
+          type: integer
+          format: in32
+          description: The minimum trade volume of the items.
+
+    DeathsCofferCalculationResult:
+      type: object
+      description: The result of the calculation.
+      properties:
+        bestOfferings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemOffering'

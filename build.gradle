@@ -1,0 +1,89 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id "org.openapi.generator" version "7.6.0"
+}
+
+group = 'hu.rhykee'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '22'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    configureEach {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.8'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/src/main/java"
+        }
+    }
+}
+
+tasks.register('cleanGenerated', Delete) {
+    delete openApiGenerate.outputDir
+}
+
+openApiGenerate {
+    generatorName = 'spring'
+    library = 'spring-boot'
+    inputSpec = "$rootDir/src/main/resources/api.yaml"
+    outputDir = project.layout.buildDirectory.dir("generated").get().asFile.path
+    apiPackage = 'hu.rhykee.api'
+    modelPackage = 'hu.rhykee.model'
+    invokerPackage = 'hu.rhykee.invoker'
+    configOptions = [
+            dateLibrary: 'java8',  // Optional: Customize configuration options as needed
+            useTags: 'true',
+            openApiNullable: 'false',
+            useSpringBoot3: 'true',
+            interfaceOnly: 'true'
+    ]
+    skipValidateSpec = true
+    importMappings = [
+            'Pageable' : 'hu.rhykee.model.Pageable',
+            'ParameterObject' : 'org.springdoc.core.annotations.ParameterObject'
+    ]
+
+}
+
+tasks.withType(JavaCompile).configureEach {
+    dependsOn tasks.openApiGenerate
+}
+
+clean.dependsOn cleanGenerated
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
