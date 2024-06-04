@@ -72,7 +72,6 @@ openApiGenerate {
     ]
     skipValidateSpec = true
     importMappings = [
-            'Pageable' : 'hu.rhykee.model.Pageable',
             'ParameterObject' : 'org.springdoc.core.annotations.ParameterObject'
     ]
 
