@@ -14,7 +14,6 @@ paths:
       summary: Returns all items.
       x-content-type: application/json
       x-accepts: application/json
-      x-spring-paginated: false
       tags:
         - "Items"
       responses:
