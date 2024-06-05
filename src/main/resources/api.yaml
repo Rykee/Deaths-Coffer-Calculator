@@ -4,7 +4,7 @@ info:
   title: Death's Coffer and Item API
   description: Death's Coffer and Item API
 servers:
-  - url: http://localhost:8080/v1
+  - url: https://api.deaths-coffer.com
 paths:
   /items:
     get:
