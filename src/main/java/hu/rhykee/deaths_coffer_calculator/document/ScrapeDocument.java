@@ -10,10 +10,10 @@ public class ScrapeDocument {
 
     @Id
     private String id;
-    private ScareSource scareSource;
+    private ScrapeSource scrapeSource;
     private OffsetDateTime lastScrapeDateTime;
 
-    public enum ScareSource {
+    public enum ScrapeSource {
         RUNELITE, JAGEX
     }
 

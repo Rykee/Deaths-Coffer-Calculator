@@ -45,6 +45,7 @@ public class ItemScraperService {
     NonNullConversionService conversionService;
 
     public void scrapeRuneLitePrices() {
+        log.info("Getting RuneLite prices...");
         Map<String, GetLatestPricesResponse.PriceDetail> latestWikiPrices = restClient.get()
                 .uri(appConfig.getWikiPriceUrl())
                 .retrieve()
@@ -58,9 +59,11 @@ public class ItemScraperService {
                 itemRepository.save(itemDocument);
             });
         });
+        log.info("Finished Getting RuneLite prices.");
     }
 
     public void scrapeGrandExchangePrices() throws InterruptedException, IOException {
+        log.info("Getting GrandExchange prices...");
         List<JagexItem> jagexItems = getAllItemsFromGe().getJagexItems();
         Map<Integer, ItemDocument> itemsById = itemRepository.findAll().stream()
                 .collect(Collectors.toMap(ItemDocument::getItemId, Function.identity()));
@@ -73,6 +76,7 @@ public class ItemScraperService {
             itemsById.computeIfAbsent(itemId, _ -> conversionService.convert(jagexItem, ItemDocument.class));
         });
         itemRepository.saveAll(itemsById.values());
+        log.info("Finished Getting GrandExchange prices.");
     }
 
     private GetCatalogueResponse getAllItemsFromGe() throws InterruptedException, IOException {
@@ -83,7 +87,6 @@ public class ItemScraperService {
             int page = 1;
             do {
                 Thread.sleep(4000);
-                log.info("Calling with character {} with page {}", letter, page);
                 String items = restClient.get()
                         .uri(getJagexUri(letter, page))
                         .retrieve()
