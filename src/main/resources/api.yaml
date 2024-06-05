@@ -11,6 +11,7 @@ paths:
       operationId: getItems
       description: >
         Returns all items with both Grand Exchange guide price and current buy/sell prices.
+        (!) Trade volume/limit is not implemented yet!
       summary: Returns all items.
       x-content-type: application/json
       x-accepts: application/json
@@ -52,7 +53,10 @@ paths:
   /calculate/deathsCoffer:
     post:
       operationId: calculateBestOfferings
-      description: Searches for the best items to offer to Death's Coffer. Sorted by the difference between the guide price and the actual buying price.
+      description: > 
+        Searches for the best items to offer to Death's Coffer.
+        Sorted by the difference between the guide price and the actual buying price.
+        (!) Trade volume filtering not implemented yet!
       summary: Searches for the best items to offer to Death's Coffer.
       requestBody:
         description: The configuration for the calculation.

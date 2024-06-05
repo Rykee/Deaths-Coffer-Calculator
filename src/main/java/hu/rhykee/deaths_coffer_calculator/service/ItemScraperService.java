@@ -8,6 +8,7 @@ import hu.rhykee.deaths_coffer_calculator.model.jagex.JagexItem;
 import hu.rhykee.deaths_coffer_calculator.model.wiki.GetLatestPricesResponse;
 import hu.rhykee.deaths_coffer_calculator.repository.ItemRepository;
 import hu.rhykee.deaths_coffer_calculator.repository.ScrapeRepository;
+import hu.rhykee.deaths_coffer_calculator.util.NonNullConversionService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
@@ -41,7 +42,7 @@ public class ItemScraperService {
     RestClient restClient;
     AppConfig appConfig;
     ObjectMapper objectMapper;
-    ConversionService conversionService;
+    NonNullConversionService conversionService;
 
     public void scrapeRuneLitePrices() {
         Map<String, GetLatestPricesResponse.PriceDetail> latestWikiPrices = restClient.get()

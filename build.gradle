@@ -30,11 +30,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-    implementation 'io.swagger.core.v3:swagger-annotations:2.2.8'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0'
     implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -68,7 +70,8 @@ openApiGenerate {
             useTags: 'true',
             openApiNullable: 'false',
             useSpringBoot3: 'true',
-            interfaceOnly: 'true'
+            interfaceOnly: 'true',
+            additionalModelTypeAnnotations: '@lombok.Builder;@lombok.NoArgsConstructor;@lombok.AllArgsConstructor'
     ]
     skipValidateSpec = true
     importMappings = [

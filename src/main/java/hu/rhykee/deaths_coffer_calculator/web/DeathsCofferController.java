@@ -6,10 +6,12 @@ import hu.rhykee.deaths_coffer_calculator.document.ItemDocument;
 import hu.rhykee.deaths_coffer_calculator.repository.ItemRepository;
 import hu.rhykee.deaths_coffer_calculator.service.ItemService;
 import hu.rhykee.deaths_coffer_calculator.service.OfferingCalculatorService;
+import hu.rhykee.deaths_coffer_calculator.util.NonNullConversionService;
 import hu.rhykee.model.CalculateBestDeathsCofferOfferingsRequest;
 import hu.rhykee.model.DeathsCofferCalculationResult;
 import hu.rhykee.model.GetItemsResponse;
 import hu.rhykee.model.Item;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.core.convert.ConversionService;
@@ -30,7 +32,7 @@ public class DeathsCofferController implements ItemsApi, CalculatorsApi {
     OfferingCalculatorService offeringCalculatorService;
     ItemService itemService;
     ItemRepository itemRepository;
-    ConversionService conversionService;
+    NonNullConversionService conversionService;
 
     @Override
     public Optional<NativeWebRequest> getRequest() {
