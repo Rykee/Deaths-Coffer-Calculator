@@ -11,6 +11,7 @@ public class ItemOfferingConverter implements Converter<ItemDocument, ItemOfferi
 
     @Override
     public @NonNull ItemOffering convert(@NonNull ItemDocument source) {
+        long deathsCofferValue = (long) Math.floor(source.getGrandExchangeGuidePrice() * 1.05f);
         return ItemOffering.builder()
                 .id(source.getItemId())
                 .name(source.getName())
@@ -22,7 +23,8 @@ public class ItemOfferingConverter implements Converter<ItemDocument, ItemOfferi
                 .tradeLimit(source.getTradeLimit())
                 .tradeVolume(source.getTradeVolume())
                 .iconPath(source.getIconPath())
-                .deathsCofferValue((long) Math.floor(source.getGrandExchangeGuidePrice() * 1.05f))
+                .deathsCofferValue(deathsCofferValue)
+                .priceDifference(deathsCofferValue - source.getBuyPrice())
                 .build();
     }
 }

@@ -144,6 +144,10 @@ components:
               type: integer
               format: int64
               description: The item's value when offering it to Death's Coffer.
+            priceDifference:
+              type: integer
+              format: int64
+              description: The difference between the buy and guided price.
 
     CalculateBestDeathsCofferOfferingsRequest:
       type: object
