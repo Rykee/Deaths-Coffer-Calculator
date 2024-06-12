@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%style{%d{ISO8601}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%40.40C{1.}}{bright,yellow}: %msg%n%throwable"
+                    disableAnsi="false"/>
+        </Console>
+
+        <RollingFile name="RollingFile"
+                     fileName="/var/_rhykee/logs/deaths-coffer.log"
+                     filePattern="/var/_rhykee/logs/$${date:yyyy-MM}/deaths-coffer-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- LOG everything at INFO level -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+
+        <!-- LOG "com.baeldung*" at TRACE level -->
+        <Logger name="hu.rhykee" level="debug"></Logger>
+    </Loggers>
+
+</Configuration>
