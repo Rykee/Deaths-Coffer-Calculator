@@ -94,6 +94,7 @@ public class ItemScraperService {
                         .retrieve()
                         .body(String.class);
                 if (items == null) {
+                    log.info("Jagex cant handle all these requests smh");
                     continue;
                 }
                 grandExchangeCatalog = objectMapper.reader().readValue(items, GetCatalogueResponse.class);
