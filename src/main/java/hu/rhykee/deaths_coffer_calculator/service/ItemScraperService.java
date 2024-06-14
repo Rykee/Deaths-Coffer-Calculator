@@ -71,6 +71,8 @@ public class ItemScraperService {
             int itemId = Integer.parseInt(jagexItem.getId());
             itemsById.computeIfPresent(itemId, (_, itemDocument) -> {
                 itemDocument.setGrandExchangeGuidePrice(jagexItem.getGrandExchangePrice());
+                itemDocument.setIconPath(jagexItem.getIconPath());
+                itemDocument.setLastGrandExchangeUpdate(OffsetDateTime.now());
                 return itemDocument;
             });
             itemsById.computeIfAbsent(itemId, _ -> conversionService.convert(jagexItem, ItemDocument.class));
