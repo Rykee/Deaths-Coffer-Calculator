@@ -22,9 +22,11 @@ public class ApplicationStartupHandler implements ApplicationListener<Applicatio
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         try {
-            scraperService.scrapeGrandExchangePrices();
+            //scraperService.scrapeGrandExchangePrices();
             scraperService.scrapeRuneLitePrices();
-        } catch (InterruptedException | IOException e) {
+            scraperService.scrapeTradeLimit();
+            scraperService.scrapeTradeVolume();
+        } catch ( IOException e) {
             log.error("Failed to scrape after application startup", e);
             throw new RuntimeException(e);
         }

@@ -126,10 +126,10 @@ components:
         tradeLimit:
           type: integer
           description: The trade limit of the item on the Grand Exchange.
-          format: int32
+          format: int64
         tradeVolume:
           type: integer
-          format: int32
+          format: int64
           description: The number of transactions of this item in the last day.
         iconPath:
           type: string

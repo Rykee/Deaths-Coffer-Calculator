@@ -1,18 +1,20 @@
 package hu.rhykee.deaths_coffer_calculator.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.rhykee.deaths_coffer_calculator.config.AppConfig;
 import hu.rhykee.deaths_coffer_calculator.document.ItemDocument;
 import hu.rhykee.deaths_coffer_calculator.model.jagex.GetCatalogueResponse;
 import hu.rhykee.deaths_coffer_calculator.model.jagex.JagexItem;
 import hu.rhykee.deaths_coffer_calculator.model.wiki.GetLatestPricesResponse;
+import hu.rhykee.deaths_coffer_calculator.model.wiki.GetTradeInfoResponse;
+import hu.rhykee.deaths_coffer_calculator.model.wiki.ItemInfo;
 import hu.rhykee.deaths_coffer_calculator.repository.ItemRepository;
 import hu.rhykee.deaths_coffer_calculator.repository.ScrapeRepository;
 import hu.rhykee.deaths_coffer_calculator.util.NonNullConversionService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -81,10 +83,44 @@ public class ItemScraperService {
         log.info("Finished Getting GrandExchange prices.");
     }
 
+    public void scrapeTradeLimit() throws JsonProcessingException {
+        log.info("Getting trade limits.");
+        String body = restClient.get()
+                .uri(appConfig.getWikiItemInfoUrl())
+                .retrieve()
+                .body(String.class);
+        List<ItemInfo> itemInfos = objectMapper.readerForListOf(ItemInfo.class).readValue(body);
+        Map<Integer, Long> limitsById = itemInfos.stream()
+                .collect(Collectors.toMap(ItemInfo::getId, ItemInfo::getLimit));
+        List<ItemDocument> items = itemRepository.findAll();
+        items.forEach(itemDocument -> itemDocument.setTradeLimit(limitsById.get(itemDocument.getItemId())));
+        itemRepository.saveAll(items);
+        log.info("Finished setting limits");
+    }
+
+    public void scrapeTradeVolume() {
+        log.info("Getting trade volume for last hour");
+        Map<Integer, Long> lastHourVolumeById = restClient.get()
+                .uri(appConfig.getWikiTradeInfoUrl())
+                .retrieve()
+                .body(GetTradeInfoResponse.class)
+                .getData().entrySet().stream()
+                .collect(Collectors.toMap(entry -> Integer.parseInt(entry.getKey()),
+                        entry -> entry.getValue().getLowPriceVolume() + entry.getValue().getHighPriceVolume()));
+        List<ItemDocument> items = itemRepository.findAll();
+        items.forEach(itemDocument -> {
+            Long tradeVolume = lastHourVolumeById.get(itemDocument.getItemId());
+            itemDocument.setTradeVolume(tradeVolume == null ? 0 : tradeVolume);
+        });
+        itemRepository.saveAll(items);
+        log.info("Finished setting trade volume");
+    }
+
     private GetCatalogueResponse getAllItemsFromGe() throws InterruptedException, IOException {
         GetCatalogueResponse response = new GetCatalogueResponse();
         response.setJagexItems(new ArrayList<>());
         for (char letter : ALPHABET) {
+            log.info("Getting item info starting with letter: {} from GrandExchange", letter);
             GetCatalogueResponse grandExchangeCatalog = new GetCatalogueResponse();
             int page = 1;
             do {

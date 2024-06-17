@@ -14,5 +14,7 @@ public class AppConfig {
 
     private String jagexPriceUrl;
     private String wikiPriceUrl;
+    private String wikiItemInfoUrl;
+    private String wikiTradeInfoUrl;
 
 }

@@ -25,8 +25,8 @@ public class ItemDocument {
     private long sellPrice;
     private OffsetDateTime lastGrandExchangeUpdate;
     private OffsetDateTime lastRuneLiteUpdate;
-    private int tradeLimit;
-    private int tradeVolume;
+    private long tradeLimit;
+    private long tradeVolume; //last hour
     private String iconPath;
     private byte[] iconImage;
 

@@ -9,5 +9,16 @@
       "name": "app.wikiPriceUrl",
       "type": "java.lang.String",
       "description": "URL for querying the latest prices from prices.runescape.wiki."
+    },
+    {
+      "name": "app.wikiItemInfo",
+      "type": "java.lang.String",
+      "description": "URL for querying information about items. Used for the trade limit."
+    },
+    {
+      "name": "app.wiki-trade-info-url",
+      "type": "java.lang.String",
+      "description": "URL for querying trade volume infos."
     }
-  ] }
+  ]
+}

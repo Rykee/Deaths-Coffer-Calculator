@@ -1,5 +1,6 @@
 package hu.rhykee.deaths_coffer_calculator.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +31,20 @@ public class ScheduleService {
     @Scheduled(cron = "0 0 */1 * * *")
     public void scrapeRuneLite() {
         scraperService.scrapeRuneLitePrices();
+    }
+
+    @Scheduled(cron = "0 0 0 */5 * *")
+    public void scrapeWikiMapping() {
+        try {
+            scraperService.scrapeTradeLimit();
+        } catch (JsonProcessingException e) {
+            log.error("Failed to scrape trade limit", e);
+        }
+    }
+
+    @Scheduled(cron = "0 0 */1 * * *")
+    public void scrapeTradeVolume() {
+        scraperService.scrapeTradeVolume();
     }
 
 }
