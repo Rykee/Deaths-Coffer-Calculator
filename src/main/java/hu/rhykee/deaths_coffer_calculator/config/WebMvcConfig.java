@@ -13,6 +13,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://deaths-coffer.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
+        registry.addMapping("/calculate/**")
+                .allowedOrigins("https://deaths-coffer.com")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*");
     }
 
 }
