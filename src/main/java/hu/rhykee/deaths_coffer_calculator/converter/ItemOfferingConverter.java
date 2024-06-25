@@ -6,6 +6,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Component
 public class ItemOfferingConverter implements Converter<ItemDocument, ItemOffering> {
 
@@ -14,6 +17,7 @@ public class ItemOfferingConverter implements Converter<ItemDocument, ItemOfferi
         long grandExchangeGuidePrice = source.getGrandExchangeGuidePrice();
         long deathsCofferValue = (long) Math.floor(grandExchangeGuidePrice * 1.05f);
         Long tradeLimit = source.getTradeLimit();
+        double roi = ((double) deathsCofferValue) / grandExchangeGuidePrice * 100.0d - 100;
         return ItemOffering.builder()
                 .id(source.getItemId())
                 .name(source.getName())
@@ -27,8 +31,15 @@ public class ItemOfferingConverter implements Converter<ItemDocument, ItemOfferi
                 .iconPath(source.getIconPath())
                 .deathsCofferValue(deathsCofferValue)
                 .priceDifference(deathsCofferValue - source.getBuyPrice())
-                .roi((double) deathsCofferValue / grandExchangeGuidePrice * 100 - 100)
+                .roi(round(roi,2))
                 .maxOfferingValue(deathsCofferValue * tradeLimit)
                 .build();
+    }
+    private double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
