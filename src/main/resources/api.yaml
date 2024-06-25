@@ -53,7 +53,7 @@ paths:
   /calculate/deathsCoffer:
     post:
       operationId: calculateBestOfferings
-      description: > 
+      description: >
         Searches for the best items to offer to Death's Coffer.
         Sorted by the difference between the guide price and the actual buying price.
         (!) Trade volume filtering not implemented yet!
@@ -95,26 +95,26 @@ components:
           type: integer
           description: The OSRS ID of the item
           format: int32
-          examples: [4115]
+          examples: [ 4115 ]
         name:
           type: string
           description: The name of the item.
-          examples: ['Abyssal whip']
+          examples: [ 'Abyssal whip' ]
         grandExchangeGuidePrice:
           type: integer
           description: The guide price of an item on the Grand Exchange.
           format: int64
-          examples: [150000]
+          examples: [ 150000 ]
         buyPrice:
           type: integer
           description: The price for which the item is actually buys at.
           format: int64
-          examples: [125000]
+          examples: [ 125000 ]
         sellPrice:
           type: integer
           description: The price for which the item is actially sells for.
           format: int64
-          examples: [135000]
+          examples: [ 135000 ]
         lastGrandExchangeUpdate:
           type: string
           description: Indicates when was the item's guide price was last updated.
@@ -148,6 +148,15 @@ components:
               type: integer
               format: int64
               description: The difference between the buy and guided price.
+            roi:
+              type: number
+              format: double
+              description: The ROI(return of investment) percentage.
+            maxOfferingValue:
+              type: integer
+              format: int64
+              description: The maximum offering value is calculated by multiplying the offering value with the buy limit.
+
 
     CalculateBestDeathsCofferOfferingsRequest:
       type: object
