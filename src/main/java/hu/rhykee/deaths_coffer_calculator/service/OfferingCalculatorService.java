@@ -34,7 +34,6 @@ public class OfferingCalculatorService {
             stream = stream.filter(itemDocument -> itemDocument.getGrandExchangeGuidePrice() * 1.05f >= request.getMinimumOfferingValue());
         }
         List<ItemDocument> bestOfferings = stream.sorted((o1, o2) -> Long.compare(o2.getGrandExchangeGuidePrice() - o2.getBuyPrice(), o1.getGrandExchangeGuidePrice() - o1.getBuyPrice()))
-                .limit(50)
                 .toList();
         return DeathsCofferCalculationResult.builder()
                 .bestOfferings(conversionService.convertList(bestOfferings, ItemOffering.class))
