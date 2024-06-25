@@ -17,11 +17,12 @@ public class ItemOfferingConverter implements Converter<ItemDocument, ItemOfferi
         long grandExchangeGuidePrice = source.getGrandExchangeGuidePrice();
         long deathsCofferValue = (long) Math.floor(grandExchangeGuidePrice * 1.05f);
         Long tradeLimit = source.getTradeLimit();
-        double roi = ((double) deathsCofferValue) / grandExchangeGuidePrice * 100.0d - 100;
+        long buyPrice = source.getBuyPrice();
+        double roi = (double) deathsCofferValue / buyPrice * 100.0d - 100;
         return ItemOffering.builder()
                 .id(source.getItemId())
                 .name(source.getName())
-                .buyPrice(source.getBuyPrice())
+                .buyPrice(buyPrice)
                 .sellPrice(source.getSellPrice())
                 .grandExchangeGuidePrice(grandExchangeGuidePrice)
                 .lastGrandExchangeUpdate(source.getLastGrandExchangeUpdate())
@@ -30,7 +31,7 @@ public class ItemOfferingConverter implements Converter<ItemDocument, ItemOfferi
                 .tradeVolume(source.getTradeVolume())
                 .iconPath(source.getIconPath())
                 .deathsCofferValue(deathsCofferValue)
-                .priceDifference(deathsCofferValue - source.getBuyPrice())
+                .priceDifference(deathsCofferValue - buyPrice)
                 .roi(round(roi,2))
                 .maxOfferingValue(deathsCofferValue * tradeLimit)
                 .build();
