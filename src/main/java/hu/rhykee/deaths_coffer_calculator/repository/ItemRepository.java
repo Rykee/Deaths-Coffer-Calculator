@@ -13,4 +13,6 @@ public interface ItemRepository extends MongoRepository<ItemDocument, String> {
     Optional<ItemDocument> findByItemId(int id);
 
     List<ItemDocument> findAllByOrderByName();
+
+    List<ItemDocument> findByLastRuneLiteUpdateNotNullAndBuyPriceNotNull();
 }

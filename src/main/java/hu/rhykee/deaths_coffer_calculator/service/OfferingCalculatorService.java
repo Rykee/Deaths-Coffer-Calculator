@@ -24,16 +24,15 @@ public class OfferingCalculatorService {
     NonNullConversionService conversionService;
 
     public DeathsCofferCalculationResult calculateBestOfferings(CalculateBestDeathsCofferOfferingsRequest request) {
-        Stream<ItemDocument> stream = itemRepository.findAll()
-                .stream()
-                .filter(itemDocument -> itemDocument.getBuyPrice() != 0);
+        Stream<ItemDocument> stream = itemRepository.findByLastRuneLiteUpdateNotNullAndBuyPriceNotNull()
+                .stream();
         if (request.getMaximumPrice() != null) {
             stream = stream.filter(itemDocument -> itemDocument.getBuyPrice() <= request.getMaximumPrice());
         }
         if (request.getMinimumOfferingValue() != null) {
             stream = stream.filter(itemDocument -> itemDocument.getGrandExchangeGuidePrice() * 1.05f >= request.getMinimumOfferingValue());
         }
-        if(request.getMinimumTradeVolume()!=null){
+        if (request.getMinimumTradeVolume() != null) {
             stream = stream.filter(itemDocument -> itemDocument.getTradeVolume() >= request.getMinimumTradeVolume());
         }
         List<ItemDocument> bestOfferings = stream.sorted((o1, o2) -> Long.compare(o2.getGrandExchangeGuidePrice() - o2.getBuyPrice(), o1.getGrandExchangeGuidePrice() - o1.getBuyPrice()))

@@ -110,7 +110,7 @@ public class ItemScraperService {
         List<ItemDocument> items = itemRepository.findAll();
         items.forEach(itemDocument -> {
             Long tradeVolume = lastHourVolumeById.get(itemDocument.getItemId());
-            itemDocument.setTradeVolume(tradeVolume == null ? -1 : tradeVolume);
+            itemDocument.setTradeVolume(tradeVolume == null ? 0 : tradeVolume);
         });
         itemRepository.saveAll(items);
         log.info("Finished setting trade volume");
