@@ -25,8 +25,7 @@ public class OfferingCalculatorService {
 
     public DeathsCofferCalculationResult calculateBestOfferings(CalculateBestDeathsCofferOfferingsRequest request) {
         Stream<ItemDocument> stream = itemRepository.findByLastRuneLiteUpdateNotNullAndBuyPriceNotNull()
-                .stream()
-                .filter(itemDocument -> itemDocument.getTradeVolume() != 0);
+                .stream();
         if (request.getMaximumPrice() != null) {
             stream = stream.filter(itemDocument -> itemDocument.getBuyPrice() <= request.getMaximumPrice());
         }
